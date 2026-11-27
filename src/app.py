@@ -1,5 +1,6 @@
 import structlog
 from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
 from fastapi_swagger_ui_theme import setup_swagger_ui_theme
 
 from src.core.config import settings
@@ -18,9 +19,10 @@ app = FastAPI(
 setup_swagger_ui_theme(app, docs_path="/docs")
 
 
-@app.get("/", tags=["home"])
+@app.get("/", tags=["home"], response_class=HTMLResponse, include_in_schema=False)
+@app.get("/posts", tags=["posts"], response_class=HTMLResponse, include_in_schema=False)
 def home():
-    return {"message": f"Hello World! from {PROJECT_NAME}!"}
+    return f"<h1>{posts[0]['title']}</h1>"
 
 
 @app.get("/api/posts", tags=["posts api"])
