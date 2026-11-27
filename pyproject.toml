@@ -1,0 +1,48 @@
+[project]
+name = "fastapi-blog-tut"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi-swagger-ui-theme>=0.1.0",
+    "fastapi[standard]>=0.165.0",
+    "pydantic>=2.14.4",
+    "python-dotenv>=1.2.4",
+    "structlog>=26.1.0",
+    "uvicorn>=0.54.0",
+]
+
+[dependency-groups]
+dev = [
+    "rich>=15.0.0",
+    "ruff>=0.17.6",
+    "ty>=0.0.112",
+]
+
+[tool.fastapi]
+entrypoint = "main:app"
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "W",
+    "F", # pycodestyle + pyflakes basics
+    "I", # import sorting
+    "B", # likely bugs
+    "UP", # modern syntax for 3.14
+    "SIM", # simplifications
+    "N", # naming
+    "S", # security (bandit)
+    "C4", # comprehensions
+    "DTZ", # timezone-naive datetimes
+    "T20", # stray print()
+    "PT", # pytest style
+    "FAST", # FastAPI-specific
+    "RUF", # ruff's own rules
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101"] # assert is how pytest works
+
