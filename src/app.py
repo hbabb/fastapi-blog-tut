@@ -1,13 +1,12 @@
 import structlog
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi_swagger_ui_theme import setup_swagger_ui_theme
 
 from src.core.config import STATIC_DIR, settings
 from src.core.logging import configure_logging
 from src.core.project import PROJECT_NAME, PROJECT_VERSION
-from src.core.templating import templates
-from src.posts.data import posts
+from src.routes import api, pages
 
 configure_logging(settings.log_level, settings.log_json)
 
@@ -21,20 +20,9 @@ setup_swagger_ui_theme(app, docs_path="/docs")
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
+app.include_router(pages.router)
 
-@app.get("/", include_in_schema=False, name="home")
-@app.get("/posts", include_in_schema=False, name="posts")
-def home(request: Request):
-    return templates.TemplateResponse(
-        request,
-        "home.html",
-        {"posts": posts, "title": "Home"},
-    )
-
-
-@app.get("/api/posts", tags=["posts api"])
-def get_posts():
-    return posts
+app.include_router(api.router)
 
 
 @app.get("/health", tags=["health"])
